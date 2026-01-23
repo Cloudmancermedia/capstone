@@ -6,8 +6,7 @@
     "build": "pnpm -r build",
     "lint": "eslint .",
     "test": "pnpm -r test",
-    "cdk": "pnpm --filter @d2c-platform/infra cdk",
-    "platform": "pnpm --filter @d2c-platform/platform cdk"
+    "cdk": "pnpm --filter @d2c-platform/infra cdk"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

@@ -6,14 +6,17 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "node -e \"console.log('No tests for api-handlers')\""
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@d2c-platform/shared": "workspace:*"
+    "@aws-sdk/client-dynamodb": "^3.700.0",
+    "@aws-sdk/lib-dynamodb": "^3.700.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.160",
     "@types/node": "^25.0.10",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "vitest": "^3.0.0"
   }
 }

@@ -1,23 +1,17 @@
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { Port } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
-import { Api, Auth, Database, Frontend, Networking, Search, Vpn, Waf } from '../constructs';
+import { Api, Auth, Database, Frontend, Networking, Search } from '../constructs';
 
 export class D2cPlatformStack extends Stack {
-  public readonly frontendBucketNameOutput!: CfnOutput;
-  public readonly frontendDistributionIdOutput!: CfnOutput;
-
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const networking = new Networking(this, 'Networking', {
       maxAzs: 2,
-      natGateways: 1,
     });
 
     this.configureSecurityGroupRules(networking);
-
-    const waf = new Waf(this, 'Waf');
 
     const database = new Database(this, 'Database', {
       vpc: networking.vpc,
@@ -30,10 +24,7 @@ export class D2cPlatformStack extends Stack {
     });
 
     const auth = new Auth(this, 'Auth');
-
-    const frontend = new Frontend(this, 'Frontend', {
-      webAclId: waf.cloudfrontWebAclArn,
-    });
+    const frontend = new Frontend(this, 'Frontend');
 
     const api = new Api(this, 'Api', {
       vpc: networking.vpc,
@@ -43,10 +34,7 @@ export class D2cPlatformStack extends Stack {
       clickstreamTable: database.clickstreamTable,
       inventoryDb: database.inventoryDb,
       searchDomain: search.domain,
-      webAclArn: waf.apiWebAclArn,
     });
-
-    new Vpn(this, 'Vpn', { vpc: networking.vpc });
 
     this.createOutputs(frontend, api, auth, database);
   }
@@ -65,17 +53,18 @@ export class D2cPlatformStack extends Stack {
     );
   }
 
-  private createOutputs(frontend: Frontend, api: Api, auth: Auth, database: Database): void {
+  private createOutputs(
+    frontend: Frontend,
+    api: Api,
+    auth: Auth,
+    database: Database,
+  ): void {
     new CfnOutput(this, 'FrontendUrl', {
       value: `https://${frontend.distribution.domainName}`,
     });
 
-    this.frontendBucketNameOutput = new CfnOutput(this, 'FrontendBucketName', {
+    new CfnOutput(this, 'FrontendBucketName', {
       value: frontend.bucket.bucketName,
-    });
-
-    this.frontendDistributionIdOutput = new CfnOutput(this, 'FrontendDistributionId', {
-      value: frontend.distribution.distributionId,
     });
 
     new CfnOutput(this, 'ApiUrl', {

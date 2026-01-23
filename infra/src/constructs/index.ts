@@ -1,8 +1,6 @@
-export * from './api';
-export * from './auth';
-export * from './database';
-export * from './frontend';
-export * from './networking';
-export * from './search';
-export * from './vpn';
-export * from './waf';
+export { Api, ApiProps } from './api';
+export { Auth } from './auth';
+export { Database, DatabaseProps } from './database';
+export { Frontend } from './frontend';
+export { Networking, NetworkingProps } from './networking';
+export { Search, SearchProps } from './search';

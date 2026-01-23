@@ -1,39 +1,29 @@
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
-import {
-  Distribution,
-  OriginAccessIdentity,
-  ViewerProtocolPolicy,
-} from 'aws-cdk-lib/aws-cloudfront';
-import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
+import { Distribution, ViewerProtocolPolicy } from 'aws-cdk-lib/aws-cloudfront';
+import { S3BucketOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
-
-export interface FrontendProps {
-  readonly webAclId?: string;
-}
 
 export class Frontend extends Construct {
   public readonly bucket: Bucket;
   public readonly distribution: Distribution;
 
-  constructor(scope: Construct, id: string, props: FrontendProps = {}) {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     this.bucket = new Bucket(this, 'FrontendBucket', {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.S3_MANAGED,
       enforceSSL: true,
-      versioned: true,
-      removalPolicy: RemovalPolicy.RETAIN,
+      versioned: false,
+      autoDeleteObjects: true,
+      removalPolicy: RemovalPolicy.DESTROY,
     });
-
-    const oai = new OriginAccessIdentity(this, 'FrontendOai');
-    this.bucket.grantRead(oai);
 
     this.distribution = new Distribution(this, 'FrontendDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
-        origin: new S3Origin(this.bucket, { originAccessIdentity: oai }),
+        origin: S3BucketOrigin.withOriginAccessControl(this.bucket),
         compress: true,
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
@@ -51,7 +41,6 @@ export class Frontend extends Construct {
           ttl: Duration.minutes(5),
         },
       ],
-      webAclId: props.webAclId,
     });
   }
 }

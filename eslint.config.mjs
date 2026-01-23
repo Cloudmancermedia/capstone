@@ -5,18 +5,10 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/cdk.out/**',
-      '**/*.js',
-      '**/*.mjs',
-      'bin/**',
-      'lib/**',
-    ],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/cdk.out/**', '**/*.js', '**/*.mjs'],
   },
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.ts'],
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',

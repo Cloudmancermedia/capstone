@@ -2,8 +2,6 @@
   "name": "@d2c-platform/infra",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "bin": {
     "d2c-platform": "bin/d2c-platform.ts"
   },

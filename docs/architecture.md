@@ -1,37 +1,30 @@
 # Architecture Overview
 
-This repository uses a modular CDK layout. The infra stack is composed of constructs for networking, data, search, auth, API, and frontend hosting.
+Minimal configuration optimized for demo/school project use. All resources use `RemovalPolicy.DESTROY` for clean teardown.
 
 ## Network Layer
 
-- VPC with public and private subnets (NAT enabled)
+- VPC with 2 AZs, isolated subnets (no NAT Gateway)
 - VPC endpoints for DynamoDB, S3, and Secrets Manager
-- VPN gateway, customer gateway, and static routes for on-prem connectivity
 
 ## Data Layer
 
-- DynamoDB tables for logistics preferences and clickstream
-- RDS PostgreSQL (multi-AZ) for inventory
-- OpenSearch domain for product search
+- DynamoDB (PAY_PER_REQUEST) for logistics preferences and clickstream
+- RDS PostgreSQL (t3.micro, single-AZ, 20GB) for inventory
+- OpenSearch (single t3.small.search node, 10GB)
 
 ## Application Layer
 
-- Lambda handlers for products and health
+- Lambda (128MB) in VPC with access to data stores
 - API Gateway with Cognito authorization
-- WAF protections for API and CloudFront
 
 ## Frontend
 
 - S3 bucket with CloudFront distribution
-- CloudFront WAF ACL attached
+- Origin Access Control for secure S3 access
 
 ## Security
 
 - Storage encryption enabled
 - SSL/TLS enforced
-- Least privilege IAM policies for Lambda access
-
-## CI/CD
-
-- Separate CDK app (`platform/`) builds and deploys infra
-- Post-deploy step publishes the web frontend and invalidates CloudFront
+- Least privilege IAM policies

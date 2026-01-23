@@ -15,10 +15,11 @@ function App() {
         <div className="hero-content">
           <h1>Fresh Food, Direct to You</h1>
           <p>
-            A direct-to-consumer platform that connects local suppliers with customers and
-            delivers quality ingredients on your schedule.
+            Experience the future of food delivery with our direct-to-consumer
+            platform. Quality ingredients, transparent sourcing, delivered to
+            your door.
           </p>
-          <button className="cta-button" type="button">Get Started</button>
+          <button className="cta-button">Get Started</button>
         </div>
       </header>
 
@@ -26,36 +27,25 @@ function App() {
         <h2>Why Choose Us</h2>
         <div className="feature-grid">
           <div className="feature-card">
+            <div className="feature-icon">🥬</div>
             <h3>Farm Fresh</h3>
-            <p>Source inventory directly from regional partners and farms.</p>
+            <p>Sourced directly from local farms for maximum freshness</p>
           </div>
           <div className="feature-card">
+            <div className="feature-icon">🚚</div>
             <h3>Fast Delivery</h3>
-            <p>Coordinate pickup and delivery windows with reliable logistics.</p>
+            <p>Same-day delivery to keep your ingredients at peak quality</p>
           </div>
           <div className="feature-card">
+            <div className="feature-icon">📱</div>
             <h3>Easy Ordering</h3>
-            <p>Order, track, and manage subscriptions in a few clicks.</p>
+            <p>Simple, intuitive ordering experience on any device</p>
           </div>
         </div>
       </section>
 
-      <section id="about" className="about">
-        <h2>Built for Growing Distributors</h2>
-        <p>
-          Secure infrastructure, real-time inventory, and scalable search let your team focus
-          on customers while the platform handles the rest.
-        </p>
-      </section>
-
-      <section id="contact" className="contact">
-        <h2>Ready to Launch?</h2>
-        <p>Contact us to start your pilot and configure delivery regions.</p>
-        <button className="secondary-button" type="button">Talk to Sales</button>
-      </section>
-
       <footer className="footer">
-        <p>Copyright 2026 D2C Food Platform. All rights reserved.</p>
+        <p>&copy; 2026 D2C Food Platform. All rights reserved.</p>
       </footer>
     </div>
   );

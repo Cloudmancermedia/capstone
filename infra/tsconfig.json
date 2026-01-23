@@ -2,9 +2,20 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
+<<<<<<< HEAD
     "lib": ["ES2022"],
     "strict": true,
     "declaration": true,
+=======
+<<<<<<<< HEAD:tsconfig.json
+    "strict": true
+  },
+  "files": []
+========
+    "lib": ["ES2022"],
+    "strict": true,
+    "declaration": false,
+>>>>>>> ce28eba (chore: reformat stack and fix deploy)
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitThis": true,
@@ -26,4 +37,8 @@
     }
   },
   "include": ["bin/**/*.ts", "src/**/*.ts"]
+<<<<<<< HEAD
+=======
+>>>>>>>> ce28eba (chore: reformat stack and fix deploy):infra/tsconfig.json
+>>>>>>> ce28eba (chore: reformat stack and fix deploy)
 }
