@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "test": "node -e \"console.log('No tests for shared')\""
   },
   "devDependencies": {
@@ -21,5 +22,12 @@
     "typescript": "5.3.3",
     "vitest": "^3.0.0"
 >>>>>>> ce28eba (chore: reformat stack and fix deploy)
+=======
+    "test": "node -e \"console.log('No tests for shared')\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "5.8.3"
+>>>>>>> f528b8f (wip)
   }
 }

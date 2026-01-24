@@ -14,8 +14,12 @@
 ========
     "lib": ["ES2022"],
     "strict": true,
+<<<<<<< HEAD
     "declaration": false,
 >>>>>>> ce28eba (chore: reformat stack and fix deploy)
+=======
+    "declaration": true,
+>>>>>>> f528b8f (wip)
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitThis": true,

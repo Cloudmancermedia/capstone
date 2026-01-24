@@ -14,28 +14,29 @@ export class Search extends Construct {
   constructor(scope: Construct, id: string, props: SearchProps) {
     super(scope, id);
 
-    const isolatedSubnets = props.vpc.selectSubnets({
-      subnetType: SubnetType.PRIVATE_ISOLATED,
-    });
-
     this.domain = new Domain(this, 'ProductSearchDomain', {
       version: EngineVersion.OPENSEARCH_2_11,
       vpc: props.vpc,
-      vpcSubnets: [{ subnets: [isolatedSubnets.subnets[0]] }],
+      vpcSubnets: [{ subnetType: SubnetType.PRIVATE_WITH_EGRESS }],
       securityGroups: [props.securityGroup],
       enforceHttps: true,
       nodeToNodeEncryption: true,
       encryptionAtRest: { enabled: true },
-      zoneAwareness: { enabled: false },
+      zoneAwareness: { enabled: true, availabilityZoneCount: 2 },
       capacity: {
-        dataNodes: 1,
+        dataNodes: 2,
         dataNodeInstanceType: 't3.small.search',
       },
       ebs: {
         enabled: true,
-        volumeSize: 10,
+        volumeSize: 20,
       },
-      removalPolicy: RemovalPolicy.DESTROY,
+      logging: {
+        appLogEnabled: true,
+        slowIndexLogEnabled: true,
+        slowSearchLogEnabled: true,
+      },
+      removalPolicy: RemovalPolicy.RETAIN,
     });
   }
 }
