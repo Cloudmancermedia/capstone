@@ -4,20 +4,23 @@ import { S3BucketOrigin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
+export interface FrontendProps {
+  readonly webAclId?: string;
+}
+
 export class Frontend extends Construct {
   public readonly bucket: Bucket;
   public readonly distribution: Distribution;
 
-  constructor(scope: Construct, id: string) {
+  constructor(scope: Construct, id: string, props: FrontendProps = {}) {
     super(scope, id);
 
     this.bucket = new Bucket(this, 'FrontendBucket', {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.S3_MANAGED,
       enforceSSL: true,
-      versioned: false,
-      autoDeleteObjects: true,
-      removalPolicy: RemovalPolicy.DESTROY,
+      versioned: true,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
     this.distribution = new Distribution(this, 'FrontendDistribution', {
@@ -41,6 +44,7 @@ export class Frontend extends Construct {
           ttl: Duration.minutes(5),
         },
       ],
+      webAclId: props.webAclId,
     });
   }
 }

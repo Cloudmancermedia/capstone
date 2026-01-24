@@ -12,16 +12,16 @@ export class Auth extends Construct {
     this.userPool = new UserPool(this, 'CustomerUserPool', {
       selfSignUpEnabled: true,
       signInAliases: { email: true },
-      mfa: Mfa.OFF,
+      mfa: Mfa.OPTIONAL,
       passwordPolicy: {
-        minLength: 8,
+        minLength: 12,
         requireLowercase: true,
         requireUppercase: true,
         requireDigits: true,
-        requireSymbols: false,
+        requireSymbols: true,
       },
       accountRecovery: AccountRecovery.EMAIL_ONLY,
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
     this.userPoolClient = this.userPool.addClient('CustomerAppClient', {

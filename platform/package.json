@@ -1,11 +1,11 @@
 {
-  "name": "@d2c-platform/infra",
+  "name": "@d2c-platform/platform",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
-    "d2c-platform": "bin/d2c-platform.ts"
+    "d2c-platform-pipeline": "bin/d2c-platform-pipeline.ts"
   },
   "scripts": {
     "build": "tsc",
@@ -15,17 +15,16 @@
     "diff": "cdk diff",
     "deploy": "cdk deploy"
   },
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.160",
-    "@types/node": "^22.0.0",
-    "aws-cdk": "^2.1102.0",
-    "esbuild": "^0.27.2",
-    "ts-node": "10.9.2",
-    "typescript": "5.8.3"
-  },
   "dependencies": {
+    "@d2c-platform/infra": "workspace:*",
     "aws-cdk-lib": "^2.236.0",
     "constructs": "^10.4.5",
     "source-map-support": "0.5.21"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.1102.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.8.3"
   }
 }

@@ -1,10 +1,23 @@
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
-import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
-import { InstanceClass, InstanceSize, InstanceType, SecurityGroup, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
+import {
+  AttributeType,
+  BillingMode,
+  Table,
+  TableEncryption,
+} from 'aws-cdk-lib/aws-dynamodb';
+import {
+  InstanceClass,
+  InstanceSize,
+  InstanceType,
+  SecurityGroup,
+  SubnetType,
+  Vpc,
+} from 'aws-cdk-lib/aws-ec2';
 import {
   Credentials,
   DatabaseInstance,
   DatabaseInstanceEngine,
+  ParameterGroup,
   PostgresEngineVersion,
 } from 'aws-cdk-lib/aws-rds';
 import { Construct } from 'constructs';
@@ -32,7 +45,9 @@ export class Database extends Construct {
       partitionKey: { name: 'customerId', type: AttributeType.STRING },
       sortKey: { name: 'preferenceType', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
-      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: TableEncryption.AWS_MANAGED,
+      pointInTimeRecovery: true,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
   }
 
@@ -41,27 +56,39 @@ export class Database extends Construct {
       partitionKey: { name: 'sessionId', type: AttributeType.STRING },
       sortKey: { name: 'eventTimestamp', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST,
+      encryption: TableEncryption.AWS_MANAGED,
+      pointInTimeRecovery: true,
       timeToLiveAttribute: 'expiresAt',
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
   }
 
   private createInventoryDatabase(vpc: Vpc, securityGroup: SecurityGroup): DatabaseInstance {
+    const parameterGroup = new ParameterGroup(this, 'InventoryDbParameters', {
+      engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_15_3 }),
+      parameters: {
+        'rds.force_ssl': '1',
+      },
+    });
+
     return new DatabaseInstance(this, 'InventoryDb', {
-      engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_15 }),
-      instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MICRO),
+      engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_15_3 }),
+      instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MEDIUM),
       vpc,
-      vpcSubnets: { subnetType: SubnetType.PRIVATE_ISOLATED },
+      vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
       credentials: Credentials.fromGeneratedSecret('inventory_admin'),
       databaseName: 'inventory',
-      multiAz: false,
-      allocatedStorage: 20,
+      multiAz: true,
+      allocatedStorage: 100,
+      maxAllocatedStorage: 200,
       storageEncrypted: true,
-      backupRetention: Duration.days(0),
-      deletionProtection: false,
+      iamAuthentication: true,
+      backupRetention: Duration.days(7),
+      deletionProtection: true,
       publiclyAccessible: false,
+      parameterGroup,
       securityGroups: [securityGroup],
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
   }
 }

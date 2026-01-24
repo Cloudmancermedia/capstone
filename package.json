@@ -6,14 +6,15 @@
     "build": "pnpm -r build",
     "lint": "eslint .",
     "test": "pnpm -r test",
-    "cdk": "pnpm --filter @d2c-platform/infra cdk"
+    "cdk": "pnpm --filter @d2c-platform/infra cdk",
+    "platform": "pnpm --filter @d2c-platform/platform cdk"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
     "eslint": "^9.39.2",
-    "typescript": "5.3.3",
+    "typescript": "5.8.3",
     "typescript-eslint": "^8.53.1"
   },
   "engines": {

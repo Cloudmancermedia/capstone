@@ -1,17 +1,13 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Build outputs
 dist/
-build/
 *.js
 *.d.ts
 *.js.map
-*.d.ts.map
-
-# Keep specific JS files if needed
-!*.config.js
-!.eslintrc.js
+!eslint.config.mjs
 
 # CDK
 cdk.out/
@@ -22,32 +18,20 @@ cdk.context.json
 .vscode/
 *.swp
 *.swo
-*~
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Environment
-.env
-.env.*
-!.env.example
-
 # Logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 
 # Test coverage
 coverage/
-.nyc_output/
 
-# Temporary files
-tmp/
-temp/
-*.tmp
-
-# Package manager
-.pnpm-store/
+# Environment
+.env
+.env.local
+.env.*.local
