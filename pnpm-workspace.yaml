@@ -1,0 +1,5 @@
+packages:
+  - 'infra'
+  - 'platform'
+  - 'packages/*'
+  - 'apps/*'

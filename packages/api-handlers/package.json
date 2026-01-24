@@ -1,0 +1,19 @@
+{
+  "name": "@d2c-platform/api-handlers",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node -e \"console.log('No tests for api-handlers')\""
+  },
+  "dependencies": {
+    "@d2c-platform/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.160",
+    "@types/node": "^25.0.10",
+    "typescript": "5.3.3"
+  }
+}

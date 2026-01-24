@@ -1,0 +1,33 @@
+:root {
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #1f1b16;
+  background-color: #f6f2e9;
+  --color-bg: #f6f2e9;
+  --color-ink: #1f1b16;
+  --color-muted: #6b6058;
+  --color-accent: #d2691e;
+  --color-accent-dark: #a85418;
+  --color-panel: #fffaf2;
+  --color-border: #e2d6c8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
