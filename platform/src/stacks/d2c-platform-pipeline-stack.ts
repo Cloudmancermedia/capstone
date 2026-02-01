@@ -1,12 +1,12 @@
-import { CfnParameter, Stack, StackProps } from 'aws-cdk-lib';
+import { CfnParameter, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { LinuxBuildImage } from 'aws-cdk-lib/aws-codebuild';
+import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import {
   CodePipeline,
   CodePipelineSource,
   ShellStep,
 } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
-import { D2cPlatformStage } from '../stages';
 
 export class D2cPlatformPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -16,30 +16,28 @@ export class D2cPlatformPipelineStack extends Stack {
       type: 'String',
       description: 'CodeStar connection ARN for GitHub.',
     });
-    const repoOwner = new CfnParameter(this, 'GitHubOwner', {
-      type: 'String',
-      description: 'GitHub organization or user name.',
-      default: 'Cloudmancermedia',
-    });
-    const repoName = new CfnParameter(this, 'GitHubRepo', {
-      type: 'String',
-      description: 'GitHub repository name.',
-      default: 'capstone',
-    });
-    const repoBranch = new CfnParameter(this, 'GitHubBranch', {
-      type: 'String',
-      description: 'GitHub branch to track.',
-      default: 'main',
-    });
+
+    const repoOwner = this.node.tryGetContext('githubOwner') || 'Cloudmancermedia';
+    const repoName = this.node.tryGetContext('githubRepo') || 'capstone';
+    const repoBranch = this.node.tryGetContext('githubBranch') || 'main';
 
     const source = CodePipelineSource.connection(
-      `${repoOwner.valueAsString}/${repoName.valueAsString}`,
-      repoBranch.valueAsString,
+      `${repoOwner}/${repoName}`,
+      repoBranch,
       { connectionArn: connectionArn.valueAsString },
     );
 
-    const pipeline = new CodePipeline(this, 'Pipeline', {
+    const artifactBucket = new Bucket(this, 'PipelineArtifactsBucket', {
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      encryption: BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
+      autoDeleteObjects: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    new CodePipeline(this, 'Pipeline', {
       pipelineName: 'D2cPlatformPipeline',
+      artifactBucket,
       synth: new ShellStep('Synth', {
         input: source,
         commands: [
@@ -58,30 +56,6 @@ export class D2cPlatformPipelineStack extends Stack {
       },
     });
 
-    const prodStage = new D2cPlatformStage(this, 'Production', {
-      env: {
-        account: Stack.of(this).account,
-        region: Stack.of(this).region,
-      },
-    });
-
-    const deployStage = pipeline.addStage(prodStage);
-
-    deployStage.addPost(
-      new ShellStep('DeployFrontend', {
-        commands: [
-          'corepack enable',
-          'corepack prepare pnpm@9.15.0 --activate',
-          'if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; else pnpm install; fi',
-          'pnpm --filter @d2c-platform/web build',
-          'aws s3 sync apps/web/dist s3://$FRONTEND_BUCKET --delete',
-          'aws cloudfront create-invalidation --distribution-id $FRONTEND_DISTRIBUTION_ID --paths "/*"',
-        ],
-        envFromCfnOutputs: {
-          FRONTEND_BUCKET: prodStage.platformStack.frontendBucketNameOutput,
-          FRONTEND_DISTRIBUTION_ID: prodStage.platformStack.frontendDistributionIdOutput,
-        },
-      }),
-    );
+    // TODO: Add deployment stages when CodeStar connection is configured
   }
 }

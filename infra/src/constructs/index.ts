@@ -1,6 +1,7 @@
 export * from './api';
 export * from './auth';
 export * from './database';
+export * from './dev-api';
 export * from './frontend';
 export * from './networking';
 export * from './search';

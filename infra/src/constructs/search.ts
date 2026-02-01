@@ -15,7 +15,7 @@ export class Search extends Construct {
     super(scope, id);
 
     this.domain = new Domain(this, 'ProductSearchDomain', {
-      version: EngineVersion.OPENSEARCH_2_11,
+      version: EngineVersion.OPENSEARCH_3_3,
       vpc: props.vpc,
       vpcSubnets: [{ subnetType: SubnetType.PRIVATE_WITH_EGRESS }],
       securityGroups: [props.securityGroup],
