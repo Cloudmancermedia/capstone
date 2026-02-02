@@ -72,7 +72,7 @@ export class Database extends Construct {
     });
 
     return new DatabaseInstance(this, 'InventoryDb', {
-      engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_15_3 }),
+      engine: DatabaseInstanceEngine.postgres({ version: PostgresEngineVersion.VER_16_8 }),
       instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MEDIUM),
       vpc,
       vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },

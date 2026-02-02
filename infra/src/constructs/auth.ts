@@ -21,7 +21,7 @@ export class Auth extends Construct {
         requireSymbols: true,
       },
       accountRecovery: AccountRecovery.EMAIL_ONLY,
-      removalPolicy: RemovalPolicy.RETAIN,
+      removalPolicy: RemovalPolicy.DESTROY,
     });
 
     this.userPoolClient = this.userPool.addClient('CustomerAppClient', {
