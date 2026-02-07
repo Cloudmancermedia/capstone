@@ -13,7 +13,7 @@ export class D2cPlatformPipelineStack extends Stack {
     super(scope, id, props);
 
     const connectionArn = 'arn:aws:codeconnections:us-east-1:963692744767:connection/4edd5f27-c166-4eb3-8e59-2f5f90442032';
-    const repoOwner = this.node.tryGetContext('githubOwner') || 'Cloudmancermedia';
+    const repoOwner = this.node.tryGetContext('githubOwner') || 'worthingtontech';
     const repoName = this.node.tryGetContext('githubRepo') || 'capstone';
     const repoBranch = this.node.tryGetContext('githubBranch') || 'main';
 
